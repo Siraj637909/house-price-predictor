@@ -11,7 +11,17 @@ st.set_page_config(page_title="House Price Predictor", page_icon="🏠")
 st.title("🏠 Indian House Price Predictor")
 st.markdown("Enter house details below to get an estimated price.")
 
-model = joblib.load("house_price_model.pkl")
+# ── Model ────────────────────────────────────────────────
+import os
+
+MODEL_PATH = "house_price_model.pkl"
+
+if not os.path.exists(MODEL_PATH):
+    st.info("Training model for the first time…")
+    from train import *
+    st.rerun()
+
+model = joblib.load(MODEL_PATH)
 
 # ── Input form ──────────────────────────────────────────
 with st.form("house_form"):
@@ -64,4 +74,4 @@ if submitted:
 
     st.markdown("---")
     st.markdown("**Input Summary:**")
-    st.dataframe(house.T, use_container_width=True)
+    st.write(house.iloc[0].to_dict())
